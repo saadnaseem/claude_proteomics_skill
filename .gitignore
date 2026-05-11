@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+._*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+*.swp
+
+# Editors / IDEs
+.vscode/
+.idea/
+
+# Environment
+.env
+.envrc
+
+# Run artifacts (skill produces these in user's cwd, not in skill dir — defensive)
+proteomics_run_*/

@@ -1,0 +1,39 @@
+name: proteomics-agent
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - pip
+  # Notebook
+  - jupyter
+  - ipykernel
+  - nbformat
+  # Core data
+  - pandas
+  - numpy
+  - scipy
+  - openpyxl
+  - xlrd
+  # Stats
+  - statsmodels
+  - scikit-learn
+  # Plotting
+  - matplotlib
+  - seaborn
+  - plotly
+  # Bio core
+  - biopython
+  - networkx
+  # pip-only (cleaner via pip than conda for these)
+  - pip:
+      - bioservices            # UniProt, KEGG, STRING, KEGG REST clients
+      - gseapy                 # enrichment + KEGG pathway viz
+      - goatools               # GO term analysis
+      - py3Dmol                # inline structure viz
+      - pyvis                  # interactive network HTML
+      - requests-cache         # disk-backed cache for all REST calls
+      - tqdm                   # progress bars in long loops
+      - tenacity               # retry decorator for flaky APIs
+      - mygene                 # gene/protein ID conversion fallback
+      - pubchempy              # small-molecule lookup if needed
