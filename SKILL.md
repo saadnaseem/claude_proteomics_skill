@@ -54,8 +54,12 @@ All artifacts go in the user's current working directory under a timestamped fol
 
 ```
 proteomics_run_YYYYMMDD_HHMMSS/
-├── notebook.ipynb            # the live notebook (build with NotebookEdit)
+├── notebook.ipynb            # the live, fully-populated notebook (build with NotebookEdit)
 ├── report.md                 # synthesis report (the "what does it mean")
+├── code/                     # ← MANDATORY: scripts that produced this run
+│   ├── run_pipeline.py       #   the parameterized pipeline script
+│   ├── config.json           #   the exact config used (input path, sample IDs, cutoffs, organism)
+│   └── README.md             #   one-paragraph reproduce instructions
 ├── figures/                  # volcano, MA, pathway maps, network HTML, AF structures
 ├── tables/                   # de_proteins.csv, enriched_pathways.csv, hub_proteins.csv
 ├── annotations/              # uniprot_cache.json, string_cache.json (re-run friendly)
@@ -63,6 +67,10 @@ proteomics_run_YYYYMMDD_HHMMSS/
 ```
 
 Create this folder **before** stage 0 starts. Use absolute paths in the notebook so the user can `cd` away without breaking things.
+
+**The `code/` folder is non-negotiable.** Every run must include the executable code that produced it — a /tmp script that auto-deletes is not acceptable. If you executed via the parameterized `examples/run_pipeline.py` (recommended), copy it + the config into `code/`. If you wrote ad-hoc scripts, save them there too. The user must be able to re-run any analysis 6 months later from the run folder alone.
+
+For multi-run cross-comparison work, also create a parent meta-analysis folder with its own `code/` containing the scripts that consume the per-run outputs.
 
 ## Conda environment
 

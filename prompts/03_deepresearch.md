@@ -4,7 +4,34 @@
 Build a literature-grounded biological context for the microbe + perturbation. Outputs feed into stages 6 (enrichment interpretation) and 11 (synthesis).
 
 ## Tools
+
+### WebSearch + WebFetch (existing)
 Use `WebSearch` for broad queries, `WebFetch` for specific URLs (UniProt proteome page, KEGG organism page, recent papers).
+
+### paperclip (additional — full-text biomedical corpus)
+`paperclip` has full-text access to PMC, bioRxiv, medRxiv, and arXiv. Use it **after** WebSearch to go deeper on the most relevant hits. Run via Bash with `export PATH="$HOME/.local/bin:$PATH"`.
+
+**When to invoke:**
+- Any query where WebSearch returns abstracts only and you need methods/results detail
+- Organism-specific proteomics or transcriptomics papers
+- Per-gene deep dives for the Stage 2 top-5 hits
+
+**Workflow:**
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+# 1. Search
+paperclip search -n 10 "<organism> <perturbation> proteomics differential expression"
+
+# 2. Read across results (lightweight LLM per paper)
+paperclip map --from <search_id> \
+  "What proteins/genes were differentially expressed? What conditions? What pathways?"
+
+# 3. Synthesize
+paperclip reduce --from <search_id> \
+  "10-bullet summary of known biology for <organism> under <perturbation>."
+```
+
+Cite every paperclip-sourced claim as **[N]** inline; include `https://citations.gxl.ai/papers/<doc_id>#L<n>` in the REFERENCES block at the end of `tables/03_deepresearch_notes.md`.
 
 ## Searches to run (parallelize with multiple WebSearch calls)
 
