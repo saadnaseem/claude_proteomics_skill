@@ -1,0 +1,77 @@
+# Curated stress / tolerance / metabolic gene modules
+# Genes given as P. putida KT2440 gene-symbol prefixes (case-insensitive).
+# Matching is done against the `Genes` field from DIA-NN; multiple symbols allowed.
+
+efflux_pumps:
+  description: "RND/ABC efflux systems for solvent and antibiotic tolerance"
+  genes: [ttgA, ttgB, ttgC, ttgD, ttgE, ttgF, ttgG, ttgH, ttgI,
+          mexA, mexB, mexE, mexF, srpA, srpB, srpC, mdtA, mdtB,
+          opmH, opmD, oprM, oprN, oprJ, czcA, czcB, czcC]
+
+outer_membrane:
+  description: "Outer membrane porins and surface proteins"
+  genes: [oprH, oprD, oprF, oprG, oprB, oprE, oprC, oprL,
+          ompA, ompC, ompW, omlA, lptD, lptA, lptB, lptC, lptE]
+
+membrane_lipid_remodelling:
+  description: "Membrane fatty-acid remodelling for fluidity adaptation"
+  genes: [cfa, fabA, fabB, fabF, fabG, fabH, fabI, fabZ, plsB, plsC,
+          desA, desB, cls, pgsA, pssA, psd]
+
+ros_oxidative_stress:
+  description: "ROS scavenging and oxidative-stress response"
+  genes: [katA, katB, katG, katE, ahpC, ahpF, sodA, sodB, sodC,
+          gpx, trxA, trxB, grxA, grxB, grxC, oxyR, soxR, soxS,
+          msrA, msrB, dps, gor, gst, gshA, gshB]
+
+chaperones_proteostasis:
+  description: "Heat-shock and protein quality control"
+  genes: [groL, groS, dnaK, dnaJ, grpE, clpA, clpB, clpC, clpP, clpX,
+          lon, ftsH, htpG, ibpA, ibpB, hslU, hslV, hslJ, hslO]
+
+translation_ribosome:
+  description: "Ribosomal proteins and translation factors (growth-rate proxy)"
+  gene_prefixes: [rps, rpl, rpm, tuf, fus, tsf]
+  genes: [infA, infB, infC, prfA, prfB, prfC, frr]
+
+central_carbon_ED:
+  description: "Entner-Doudoroff pathway (primary glycolytic route in P. putida)"
+  genes: [zwf, zwfA, zwfB, zwfC, pgl, edd, eda, gnd, gntZ, kguK, kguT,
+          glk, pgi, fbp, gap, gapA, gapB, pgk, gpmA, eno, pyk, pps]
+
+central_carbon_TCA:
+  description: "TCA cycle and anaplerosis"
+  genes: [gltA, acnA, acnB, icd, sucA, sucB, sucC, sucD, sdhA, sdhB,
+          sdhC, sdhD, fumA, fumB, fumC, mdh, ppc, pck, mqo]
+
+oxidative_phosphorylation:
+  description: "Electron transport chain and ATP synthesis"
+  genes: [nuoA, nuoB, nuoC, nuoE, nuoF, nuoG, nuoH, nuoI, nuoJ,
+          cyoA, cyoB, cyoC, cyoD, cyoE, ccoN, ccoO, ccoP, cioA, cioB,
+          atpA, atpB, atpC, atpD, atpE, atpF, atpG, atpH]
+
+amine_oxidation_PQQ:
+  description: "PQQ-dependent dehydrogenases for amine/alcohol oxidation (butylamine)"
+  genes: [pedE, pedH, pedI, pedF, qedH, qedA, exaA, mdh1, mdh2,
+          pqqA, pqqB, pqqC, pqqD, pqqE, pqqF]
+
+choline_betaine:
+  description: "Choline catabolism and glycine-betaine biosynthesis (Chlys)"
+  genes: [betA, betB, betI, betT, gbcA, gbcB, soxA, soxB, dmgO]
+
+lysine_catabolism:
+  description: "Lysine to glutarate via δ-aminovalerate (Chlys)"
+  genes: [cadA, ldcA, ldcC, davA, davB, davD, davT, kgsA, gabT, gabD]
+
+aromatic_phenolic_detox:
+  description: "Phenolic and aromatic detoxification (lignin residues)"
+  genes: [catA, catB, catC, xylE, pcaG, pcaH, pcaB, pcaC, pcaD, pcaF,
+          pobA, vanA, vanB, hpd, hmgA, hmgB, hmgC]
+
+beta_oxidation:
+  description: "Fatty acid β-oxidation (alternative carbon entry)"
+  genes: [fadA, fadB, fadD, fadE, fadH, fadI, fadJ, fadK, fadL, atoB]
+
+general_stress_sigma:
+  description: "Alternative sigma factors and general stress regulators"
+  genes: [rpoS, rpoH, rpoE, rpoN, algU, mucA, mucB, mucD, gacA, gacS]

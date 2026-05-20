@@ -1,0 +1,52 @@
+# PRT1296 analysis configuration
+project:
+  id: PRT1296
+  title: "ALE-evolved HGL1175 vs KT2440 in Chlys and butylamine hydrolysates (35% v/v in M9)"
+  organism: Pseudomonas putida KT2440
+  taxon_id: 160488
+  uniprot_organism: ppukt2440
+  kegg_org: ppu
+
+paths:
+  data: data
+  outputs: outputs
+  figures: outputs/figures
+  tables: outputs/tables
+  enrichment: outputs/enrichment
+  memo: memo
+
+samples:
+  SN_0725_80: {strain: KT2440,  medium: glucose,    label: "KT-glu"}
+  SN_0725_83: {strain: KT2440,  medium: Chlys,      label: "KT-Ch"}
+  SN_0725_86: {strain: KT2440,  medium: butylamine, label: "KT-Bu"}
+  SN_0725_89: {strain: HGL1175, medium: glucose,    label: "HGL-glu"}
+  SN_0725_92: {strain: HGL1175, medium: Chlys,      label: "HGL-Ch"}
+  SN_0725_95: {strain: HGL1175, medium: butylamine, label: "HGL-Bu"}
+
+replicates: [R1, R2, R3]
+
+# (group_A, group_B) means comparison is A vs B → log2FC = mean(A) - mean(B)
+contrasts:
+  KT_Chlys_vs_glucose:        [KT-Ch, KT-glu]
+  KT_butylamine_vs_glucose:   [KT-Bu, KT-glu]
+  KT_butylamine_vs_Chlys:     [KT-Bu, KT-Ch]
+  HGL1175_Chlys_vs_glucose:   [HGL-Ch, HGL-glu]
+  HGL1175_butylamine_vs_glucose: [HGL-Bu, HGL-glu]
+  HGL1175_butylamine_vs_Chlys: [HGL-Bu, HGL-Ch]
+  glucose_HGL1175_vs_KT:      [HGL-glu, KT-glu]
+  Chlys_HGL1175_vs_KT:        [HGL-Ch, KT-Ch]
+  butylamine_HGL1175_vs_KT:   [HGL-Bu, KT-Bu]
+
+thresholds:
+  q_strict: 0.05
+  log2fc_strict: 1.0
+  q_lenient: 0.10
+  log2fc_lenient: 0.585      # 1.5-fold
+
+plot:
+  dpi: 300
+  fig_width_in: 7
+  fig_height_in: 5
+  font_family: "DejaVu Sans"
+  palette_strain: {KT2440: "#4477AA", HGL1175: "#EE6677"}
+  palette_medium: {glucose: "#BBBBBB", Chlys: "#228833", butylamine: "#CCBB44"}

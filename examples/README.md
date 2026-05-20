@@ -54,6 +54,22 @@ Edit the `COMPARISONS` dict at the top to point at your set of files. Edit the `
 
 Generates a Jupyter notebook (.ipynb) that reproduces the entire Phase 1 + Phase 3 analysis from raw data → final figures. Useful for handing the full analysis to a collaborator.
 
+## `PRT1296_end_to_end/` — full modular pipeline (2×3 factorial reference)
+
+The most complete worked example in the repo. A 10-script modular pipeline (`scripts/00_…09_` + `run_all.sh`) that runs every stage of the SKILL.md pipeline on a real 2 (strain) × 3 (medium) factorial DIA-NN dataset, with config-driven sample mapping, contrast definitions, and gene-symbol tolerance modules.
+
+Includes:
+- Self-contained UpSet plotter (no `upsetplot` dependency)
+- UniProt-GOA + KEGG REST custom hypergeometric ORA (works for any KEGG-indexed organism — *P. putida*, *B. subtilis*, etc.)
+- Per-protein strain × medium two-factor ANOVA with interaction-term FDR
+- Curated 15-module tolerance scoring + per-module ANOVA
+- Interaction-protein categorizer (reciprocal / buffered / hyper-induced / constitutive)
+- Per-cluster and per-DEP-set enrichment
+- Stress-amplitude scatter + annotated volcano panels
+- Full 13-section `data_analysis_plan.md` you can crib for your own project
+
+Use this as the starting point for any new 2-factor (or higher) proteomics study. Drop your DIA-NN CSV in `data/`, edit `config/analysis.yaml`, run `bash scripts/run_all.sh`.
+
 ## When to use these vs the agent
 
 - **Use the agent (`/proteomics-agent`)** when you need the full hypothesis + deep research + synthesis story — it does the interactive interpretation steps the scripts don't.
