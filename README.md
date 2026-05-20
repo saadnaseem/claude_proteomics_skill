@@ -52,23 +52,57 @@ proteomics_run_YYYYMMDD_HHMMSS/
 
 External API calls are cached to disk via `requests-cache` — re-runs are free and offline-capable.
 
+## Prerequisites
+
+- macOS or Linux (Windows untested; should work via WSL2)
+- [Claude Code](https://claude.com/claude-code) installed and authenticated (`claude --version`)
+- [Miniconda](https://docs.conda.io/projects/miniconda/) or Anaconda (Python 3.11 is pinned in `env/environment.yml`)
+- git
+- ~2 GB free disk for the conda environment, plus space for your run outputs and API response cache
+
+You do **not** need any API keys. UniProt, KEGG, STRING, and AlphaFold are all free public APIs.
+
 ## Installation
 
 ```bash
 # 1. Clone into your Claude Code skills directory
-git clone https://github.com/saadnaseem/claude_proteomics_skill.git ~/.claude/skills/proteomics-agent
+mkdir -p ~/.claude/skills
+git clone https://github.com/saadnaseem/claude_proteomics_skill.git \
+          ~/.claude/skills/proteomics-agent
 
-# 2. Create the conda environment
+# 2. Create the conda environment (takes ~5 min)
 conda env create -f ~/.claude/skills/proteomics-agent/env/environment.yml
 
 # 3. Register the Jupyter kernel (so .ipynb cells use the right env)
 conda run -n proteomics-agent python -m ipykernel install --user \
   --name proteomics-agent --display-name "Python (proteomics-agent)"
+
+# 4. Verify the install
+conda run -n proteomics-agent python -c "import pandas, scipy, statsmodels, \
+    sklearn, matplotlib, seaborn, bioservices, gseapy, goatools, networkx; \
+    print('OK')"
 ```
 
-That's it. The skill is now available in every Claude Code session on the machine.
+If step 4 prints `OK`, the skill is ready. It is now available in every Claude Code session on this machine — no per-project setup needed.
+
+### Updating later
+
+```bash
+cd ~/.claude/skills/proteomics-agent
+git pull
+conda env update -f env/environment.yml --prune
+```
+
+### Uninstalling
+
+```bash
+conda env remove -n proteomics-agent
+rm -rf ~/.claude/skills/proteomics-agent
+```
 
 ## Usage
+
+### Option 1 — interactive agent (recommended for new analyses)
 
 In any Claude Code session:
 
@@ -87,7 +121,21 @@ or natural language:
 
 > *Run a proteomics analysis on `~/data/exp042.xlsx` — conditions A=SN_0725_92 vs B=SN_0725_83, organism Pseudomonas putida KT2440.*
 
-Claude Code will pick up the skill and walk through stages 0–11, pausing at the ✋ gates for your approval.
+Claude Code will pick up the skill and walk through stages 0–11, pausing at the ✋ gates for your approval. Expect 1–3 hours for a first run (most of which is API calls — subsequent runs are much faster thanks to caching).
+
+### Option 2 — non-interactive scripted pipeline
+
+If you have many similar files (batch mode) or want a reproducible analysis without the interactive interpretation layers, run the example scripts directly. The cleanest starting point is the modular 2-factor reference in [`examples/PRT1296_end_to_end/`](examples/PRT1296_end_to_end/) — see its README for how to adapt to your data. Older simpler examples (`run_pipeline.py`, `phase3_meta_analysis.py`, `build_meta_notebook.py`) are also in `examples/`.
+
+### Quick smoke test
+
+To verify the agent triggers correctly without running real data:
+
+```bash
+cd /tmp && claude
+```
+
+Then type: `/proteomics-agent`. Claude should respond by asking for the xlsx path, condition labels, and organism — that's the stage-0 intake check.
 
 ## Repo layout
 
@@ -106,8 +154,27 @@ proteomics-agent/
 ├── templates/
 │   ├── notebook_setup.py             # standard imports + cache + plotting defaults
 │   └── report_template.md            # synthesis report skeleton
+├── examples/
+│   ├── README.md                     # guide to which example to use when
+│   ├── PRT1296_end_to_end/           # full modular 2×3 factorial pipeline (recommended starting point)
+│   ├── run_pipeline.py               # single-comparison batch script
+│   ├── phase3_meta_analysis.py       # multi-comparison cross-analysis
+│   └── build_meta_notebook.py        # emit a populated notebook for handoff
 └── README.md
 ```
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| `conda: command not found` | Install Miniconda first: <https://docs.conda.io/projects/miniconda/> |
+| `claude: command not found` | Install Claude Code: <https://claude.com/claude-code> |
+| `ModuleNotFoundError: bioservices` (or any other) inside a run | The active env is wrong. Either `conda activate proteomics-agent` first, or prefix commands with `conda run -n proteomics-agent`. |
+| Agent does not trigger on `/proteomics-agent` | Confirm the skill is at `~/.claude/skills/proteomics-agent/SKILL.md` and that you started `claude` (not a separate process). Run `/skills` inside Claude Code to list registered skills. |
+| KEGG REST returns 403 / connection refused | KEGG enforces ~3 req/s. The example pipeline already throttles; if you wrote custom code, add `time.sleep(0.3)` between calls. Re-run with cache enabled. |
+| `HTTP 400` from UniProt batch lookup with `Q877Q0;Q88FK3`-style accessions | DIA-NN joins protein-group members with `;`. Split on `;` and use the first accession (see `examples/PRT1296_end_to_end/scripts/06_enrichment.py:clean_accession` for the canonical fix). |
+| `upsetplot` crashes with `Invalid RGBA argument: nan` on matplotlib ≥ 3.10 | Known version mismatch. The PRT1296 example uses a self-contained UpSet plotter (`scripts/04_dep_sets.py`) that avoids the dep entirely. |
+| Re-runs feel as slow as the first run | The API cache lives in your *output* directory, not the skill repo. To share a cache across runs, set `--cache-dir` or symlink `annotations/api_cache.sqlite` between run directories. |
 
 ## External resources used at runtime
 
